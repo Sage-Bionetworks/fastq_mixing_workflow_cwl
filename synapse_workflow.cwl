@@ -102,7 +102,7 @@ steps:
     out: [output_file]
 
   sync_to_synapse:
-    run: ../synapse_python_client_cwl/sync_to_synapse.cwl
+    run: sync_to_synapse.cwl
     in: 
       synapse_config_file: synapse_config_file
       tsv_file: rename/output_file
