@@ -40,7 +40,7 @@ outputs:
 
   manifest: 
     type: File
-    outputSource: create_manifest/output
+    outputSource: sync_to_synapse/output
 
 steps:
   
@@ -100,21 +100,15 @@ steps:
       input_file: kallisto/abundance_tsv
       output_string: output_name
     out: [output_file]
-    
-  create_manifest:
-    run: create_manifest.cwl
+
+  sync_to_synapse:
+    run: ../synapse_python_client_cwl/sync_to_synapse.cwl
     in: 
+      synapse_config_file: synapse_config_file
       tsv_file: rename/output_file
       upload_id: upload_id
       fastq_p1_synapse_ids: fastq_p1_synapse_ids
       fastq_p2_synapse_ids: fastq_p2_synapse_ids
       kallisto_index_synapse_id: kallisto_index_synapse_id
       yaml_config_file: yaml_config_file
-    out: [output]
-
-  sync_to_synapse:
-    run: ../synapse_python_client_cwl/sync_to_synapse.cwl
-    in: 
-      synapse_config_file: synapse_config_file
-      manifest_file: create_manifest/output
     out: [output]
