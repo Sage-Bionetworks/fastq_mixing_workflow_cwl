@@ -115,6 +115,6 @@ steps:
   sync_to_synapse:
     run: ../synapse_python_client_cwl/sync_to_synapse.cwl
     in: 
-      config_file: synapse_config_file
+      synapse_config_file: synapse_config_file
       manifest_file: create_manifest/output
     out: [output]
