@@ -31,6 +31,8 @@ inputs:
     inputBinding:
       prefix: --seed
 
+  MIXER_TOTAL_READS: ["null", int]
+
   KALLISTO_INDEX_FILE: File
   KALLISTO_THREADS: int
   
@@ -41,6 +43,7 @@ outputs:
     outputSource: [RENAME/output_file]
 
 steps:
+
   MIX:
     run: ../fastq_mixer/fastq_mixer.cwl
     in: 
@@ -48,6 +51,7 @@ steps:
       fastq_files_p2: FASTQ_P2_FILES
       sample_fractions: MIXER_FRACTIONS
       seed: MIXER_SEED
+      total_reads: MIXER_TOTAL_READS
     out: [output_file1, output_file2]
       
   KALLISTO:
