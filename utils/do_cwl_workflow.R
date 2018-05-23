@@ -9,7 +9,8 @@ do_cwl <- function(cwl, yaml, log){
         "cwltool", 
         args = c(cwl, yaml), 
         stderr = T)
-    writeLines(stderr, log)
+    writeLines(stderr, log) 
+    system("rm -rf /tmp/tmp*")
 }
 
 yamls <- list.files() %>% 

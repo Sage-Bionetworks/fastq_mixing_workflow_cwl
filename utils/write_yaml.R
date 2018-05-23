@@ -28,7 +28,8 @@ create_synapse_workflow_yaml <- function(
         "kallisto_index_synapse_id" = kallisto_index_synapse_id,
         "mixer_seed" = mixer_seed,
         "mixer_total_reads" = mixer_total_reads,
-        "kallisto_threads" = kallisto_threads)
+        "kallisto_threads" = kallisto_threads,
+        "annotations" = annotations)
     other_list <- purrr::discard(other_list, is.null)
     lst <- (c(file_list, other_list))
     yaml::write_yaml(lst, yaml_file)
