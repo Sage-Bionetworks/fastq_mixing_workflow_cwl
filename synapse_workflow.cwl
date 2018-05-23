@@ -50,12 +50,6 @@ steps:
       config_file: synapse_config_file
       synapse_id: kallisto_index_synapse_id
     out: [output]
-    
-  gunzip_index_file:
-    run: ../misc_cwl/gunzip.cwl
-    in: 
-      input: get_index_file/output
-    out: [output]
   
   get_p1_files:
     run: ../synapse_python_client_cwl/syn_get.cwl
@@ -74,12 +68,34 @@ steps:
     scatter: synapse_id
     scatterMethod: dotproduct
     out: [output]
+    
+  gunzip_index_file:
+    run: ../misc_cwl/gunzip.cwl
+    in: 
+      input: get_index_file/output
+    out: [output]
+
+  gunzip_p1_files:
+    run: ../misc_cwl/gunzip.cwl
+    in: 
+      input: get_p1_files/output
+    scatter: input
+    scatterMethod: dotproduct
+    out: [output]
+    
+  gunzip_p2_files:
+    run: ../misc_cwl/gunzip.cwl
+    in: 
+      input: get_p2_files/output
+    scatter: input
+    scatterMethod: dotproduct
+    out: [output]
 
   mix:
     run: ../fastq_mixer/fastq_mixer.cwl
     in: 
-      fastq_files_p1: get_p1_files/output
-      fastq_files_p2: get_p2_files/output
+      fastq_files_p1: gunzip_p1_files/output
+      fastq_files_p2: gunzip_p1_files/output
       sample_fractions: mixer_fractions
       seed: mixer_seed
       total_reads: mixer_total_reads
