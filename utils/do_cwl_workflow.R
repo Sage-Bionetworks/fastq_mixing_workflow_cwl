@@ -15,7 +15,7 @@ do_cwl <- function(cwl, yaml, log){
 yamls <- list.files() %>% 
     purrr::keep(stringr::str_detect(., ".yaml$"))
 
-logs <- stringr::str_replace(".yaml", ".txt")
+logs <- stringr::str_replace(yamls, ".yaml", ".txt")
 
 map2(yamls, logs, function(yaml, log)
     do_cwl(cwl_file, yaml, log))
