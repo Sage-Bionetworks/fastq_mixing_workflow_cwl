@@ -9,63 +9,58 @@ requirements:
 
 inputs:
 
-  OUTPUT_NAME: string
+  output_name: string
 
-  FASTQ_P1_FILES: 
+  fastq_p1_files: 
     type:
       type: array
       items: File
       
-  FASTQ_P2_FILES: 
+  fastq_p2_files: 
     type:
       type: array
       items: File
       
-  MIXER_FRACTIONS:
+  mixer_fractions:
     type:
       type: array
       items: float
 
-  MIXER_SEED:
-    type: ["null", int]
-    inputBinding:
-      prefix: --seed
-
-  MIXER_TOTAL_READS: ["null", int]
-
-  KALLISTO_INDEX_FILE: File
-  KALLISTO_THREADS: int
+  mixer_seed: ["null", int]
+  mixer_total_reads: ["null", int]
+  kallisto_index_file: File
+  kallisto_threads: ["null", int]
   
 outputs:
   
-  OUPUT_TSV: 
+  output_tsv: 
     type: File
-    outputSource: [RENAME/output_file]
+    outputSource: [rename/output_file]
 
 steps:
 
-  MIX:
+  mix:
     run: ../fastq_mixer/fastq_mixer.cwl
     in: 
-      fastq_files_p1: FASTQ_P1_FILES
-      fastq_files_p2: FASTQ_P2_FILES
-      sample_fractions: MIXER_FRACTIONS
-      seed: MIXER_SEED
-      total_reads: MIXER_TOTAL_READS
+      fastq_files_p1: fastq_p1_files
+      fastq_files_p2: fastq_p2_files
+      sample_fractions: mixer_fractions
+      seed: mixer_seed
+      total_reads: mixer_total_reads
     out: [output_file1, output_file2]
       
-  KALLISTO:
+  kallisto:
     run: ../kallisto_cwl/fastq_abundances_workflow.cwl
     in: 
-      INDEX_FILE: KALLISTO_INDEX_FILE
-      THREADS: KALLISTO_THREADS
-      FASTQ_FILE1: MIX/output_file1
-      FASTQ_FILE2: MIX/output_file2
-    out: [ABUNDANCE_TSV]
+      index_file: kallisto_index_file
+      threads: kallisto_threads
+      fastq_file1: mix/output_file1
+      fastq_file2: mix/output_file2
+    out: [abundance_tsv]
     
-  RENAME:
-    run: rename.cwl
+  rename:
+    run: ../misc_cwl/rename.cwl
     in: 
-      input_file: KALLISTO/ABUNDANCE_TSV
-      output_string: OUTPUT_NAME
+      input_file: kallisto/abundance_tsv
+      output_string: output_name
     out: [output_file]

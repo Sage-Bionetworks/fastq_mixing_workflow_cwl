@@ -1,19 +1,21 @@
 library(purrr)
-library(readr)
-library(magrittr)
+library(stringr)
 
 args <- commandArgs(trailingOnly=TRUE)
-manifest <- args[1]
-manifest_df <- readr::read_tsv(manifest)
+cwl_file <- args[1]
 
-do_cwl <- function(row){
+do_cwl <- function(cwl, yaml, log){
     stderr <- system2(
         "cwltool", 
-        args = c("fastq_mixing_workflow_cwl/repeat_workflow.cwl", row$yaml), 
+        args = c(cwl, yaml), 
         stderr = T)
-    writeLines(stderr, row$log)
+    writeLines(stderr, log)
 }
 
-manifest_df %>% 
-    split(1:nrow(.)) %>% 
-    purrr::walk(do_cwl)
+yamls <- list.files() %>% 
+    purrr::keep(stringr::str_detect(., ".yaml$"))
+
+logs <- stringr::str_replace(".yaml", ".txt")
+
+map2(yamls, logs, function(yaml, log)
+    do_cwl(cwl_file, yaml, log))
