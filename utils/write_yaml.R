@@ -60,3 +60,7 @@ create_workflow_yaml <- function(
     lst <- (c(file_list, other_list))
     yaml::write_yaml(lst, yaml_file)
 }
+
+file_to_yaml_file <- function(file){
+    list("path" = file, "class" = "File")
+}
